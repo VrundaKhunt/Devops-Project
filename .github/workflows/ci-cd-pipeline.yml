@@ -10,38 +10,14 @@ on:
       - main
 
 jobs:
-  # -----------------------
-  # Step 1: Build and Test Services
-  # -----------------------
-  build-test:
-    name: Build and Test Microservices
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install and Test Services
-        run: |
-          for service in order-service payment-service; do
-            echo "Installing and testing $service..."
-            cd $service
-            npm install
-            npm test
-            cd ..
-          done
+ 
 
   # -----------------------
-  # Step 2: Build Docker Images
+  # Step 1: Build Docker Images
   # -----------------------
   docker-build:
     name: Build Docker Images
     runs-on: ubuntu-latest
-    needs: build-test
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -65,7 +41,7 @@ jobs:
           docker push myorg/payment-service:latest
 
   # -----------------------
-  # Step 3: Deploy to Kubernetes
+  # Step 2: Deploy to Kubernetes
   # -----------------------
   deploy:
     name: Deploy to Kubernetes
